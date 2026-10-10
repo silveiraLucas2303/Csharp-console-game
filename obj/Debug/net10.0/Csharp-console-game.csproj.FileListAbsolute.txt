@@ -1,0 +1,14 @@
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.GeneratedMSBuildEditorConfig.editorconfig
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.AssemblyInfoInputs.cache
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.AssemblyInfo.cs
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.csproj.CoreCompileInputs.cache
+C:\code\Csharp-console-game\bin\Debug\net10.0\Csharp-console-game.exe
+C:\code\Csharp-console-game\bin\Debug\net10.0\Csharp-console-game.deps.json
+C:\code\Csharp-console-game\bin\Debug\net10.0\Csharp-console-game.runtimeconfig.json
+C:\code\Csharp-console-game\bin\Debug\net10.0\Csharp-console-game.dll
+C:\code\Csharp-console-game\bin\Debug\net10.0\Csharp-console-game.pdb
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.dll
+C:\code\Csharp-console-game\obj\Debug\net10.0\refint\Csharp-console-game.dll
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.pdb
+C:\code\Csharp-console-game\obj\Debug\net10.0\Csharp-console-game.genruntimeconfig.cache
+C:\code\Csharp-console-game\obj\Debug\net10.0\ref\Csharp-console-game.dll
