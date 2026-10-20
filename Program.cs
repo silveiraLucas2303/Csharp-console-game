@@ -1,24 +1,40 @@
 ﻿//fazer equação para largura da box
+//aplicar as variáveis de configurações da caixa para a showFood
 
 
-//espera até terminal estar maximizado
+/*DECLARAÇÕES INICIAS*/
+Random random = new Random();
 
 /*CONFIGURAÇÕES INICIAS*/
-
+bool testData = false;
 int boxHeight = 29;
 int boxWidth = 0;
 int boxY = 11; //max = 11
 
+/*Available player and food strings */
+string[] states = { "('-')", "(^-^)", "(X_X)" };
+string[] foods = { "@@@@@", "$$$$$", "#####" };
+
+// Current player string displayed in the Console
+string player = states[0];
+//string food = foods[0];
+
 maximizeTerminal();
-printBox();
+ InitializeGame();
 
 
+if(testData)
+{
+    Console.SetCursorPosition(136 - player.Length, 39);
+    Console.Write("12345");
 
+
+}
 
 Console.ReadKey();
 
 //verifica se o terminal está em tela cheia
-bool isTerminalMaximized() 
+bool isTerminalMaximized()
 {
     return 41 == Console.WindowHeight && 156 == Console.WindowWidth;
 }
@@ -42,6 +58,7 @@ void maximizeTerminal()
 
 }
 
+//imprime area principal do jogo
 void printBox()
 {
     int y = boxY;
@@ -49,7 +66,7 @@ void printBox()
     int w = boxWidth;
 
     string space = new string(' ', 19 + w);
-    string line = new string('-', 116 - w *2);
+    string line = new string('-', 116 - w * 2);
 
     Console.SetCursorPosition(0, y);
     Console.Write(space);
@@ -72,4 +89,27 @@ void printBox()
     Console.Write(line);
     Console.Write('+');
     Console.Write(space);
+}
+
+void InitializeGame()
+{
+    printBox();
+    ShowFood();
+    Console.SetCursorPosition(20, 12);
+    Console.Write(player);
+}
+
+
+void ShowFood()
+{
+    // Update food to a random index
+    int food = random.Next(0, foods.Length);
+
+    // Update food position to a random location inside of the box
+    int foodX = random.Next(20, 136 - player.Length); 
+    int foodY = random.Next(12, 39);
+
+    // Display the food at the location
+    Console.SetCursorPosition(foodX, foodY); //metodo da classe Conosole que configura o local do cursor 
+    Console.Write(foods[food]);
 }
