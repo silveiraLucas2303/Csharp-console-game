@@ -4,3 +4,266 @@ futuras adições:
 centralizar o quadrado em que o personagem pode se mover
 status de posição a cima dess quadrado
 numero de rodadas
+
+
+/*
+
+*/
+using System.Runtime.InteropServices;
+internal class Program
+{
+    // Structure used by GetWindowRect
+    struct Rect
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+    private static void Main(string[] args)
+    {
+        Console.WriteLine("Press enter to start!");
+
+        maximizeWindow();
+
+        Random random = new Random();
+        Console.CursorVisible = false; //desativa o mouse
+
+        int height1 = 29;//altura limite do alcance do personagem no console
+        int width1 = 131;
+        bool shouldExit = false;
+        bool onlyDirectionals = true;
+        bool increaseSpeed = true;
+
+        //bool testData = false;
+
+        bool showPositionData = true;
+
+        // Console position of the player
+        int playerX = 1;
+        int playerY = 10;
+
+        // Console position of the food
+        int foodX = 0;
+        int foodY = 0;
+
+        // Available player and food strings
+        string[] states = { "('-')", "(^-^)", "(X_X)" };
+        string[] foods = { "@@@@@", "$$$$$", "#####" };
+
+        // Current player string displayed in the Console
+        string player = states[0];
+
+        // Index of the current food
+        int food = 0;
+
+        InitializeGame();
+
+        while (!shouldExit)
+        {
+            if (TerminalResized())
+                break;
+            if (AteFood())
+            {
+                ShowFood();
+                ChangePlayer();
+                if (checkBadAperance())
+                {
+                    FreezePlayer();
+                }
+            }
+            if (checkGoodAperance() && increaseSpeed)
+            {
+                Move(3);
+            }
+            else Move();
+        }
+
+        Console.Clear();
+        Console.Write("Console was resized. Program exiting in ");
+        for (int i = 2; i > 0; i--)
+        {
+            Console.SetCursorPosition(40, 0);
+            Console.Write(i);
+            Thread.Sleep(400);
+        }
+
+
+        // Returns true if the Terminal was resized 
+        bool TerminalResized()
+        {
+            return 1 == 2;//height != Console.WindowHeight - 1 || width != Console.WindowWidth - 5;
+        }
+
+        // Displays random food at a random location
+        void ShowFood()
+        {
+            // Update food to a random index
+            food = random.Next(0, foods.Length);
+
+            // Update food position to a random location
+            //foodX = random.Next(0, width1 - player.Length);
+            foodX = random.Next(0, 115 - player.Length);
+            foodY = random.Next(0, height1 - 1);
+
+            // Display the food at the location
+            Console.SetCursorPosition(foodX, foodY); //metodo da classe Conosole que configura o local do cursor 
+            Console.Write(foods[food]);
+        }
+
+        // Changes the player to match the food consumed
+        void ChangePlayer()
+        {
+            player = states[food];
+            Console.SetCursorPosition(playerX, playerY);
+            Console.Write(player);
+        }
+        // Temporarily stops the player from moving
+        void FreezePlayer()
+        {
+            System.Threading.Thread.Sleep(1000);
+            player = states[0];
+        }
+
+        // Reads directional input from the Console and moves the player
+        void Move(int speed = 1)
+        {
+            //int currWidth = Console.WindowWidth;
+            //int currHeigth = Console.WindowHeight;
+
+            int lastX = playerX;
+            int lastY = playerY;
+
+            switch (Console.ReadKey(true).Key) //captura a tecla pressionada. possui a sobrecarga bool, que indica a condição de devolver a tecla pressionada
+            {
+                case ConsoleKey.UpArrow:
+                    playerY--;
+                    break;
+                case ConsoleKey.DownArrow:
+                    playerY++;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    playerX -= speed;
+
+                    break;
+                case ConsoleKey.RightArrow:
+
+                    playerX += speed;
+
+                    break;
+                case ConsoleKey.Escape:     //tecla esc
+                    shouldExit = true;
+                    break;
+                default:
+                    if (onlyDirectionals)
+                    {
+                        shouldExit = true;
+                    }
+                    break;
+            }
+
+            // Clear the characters at the previous position
+            Console.SetCursorPosition(lastX, lastY);
+            for (int i = 0; i < player.Length; i++)
+            {
+                Console.Write(" ");
+            }
+
+            // Keep player position within the bounds of the Terminal window
+            playerX = (playerX < 0) ? 0 : (playerX >= width1 ? width1 : ( playerX < 1 ? 1 :playerX )); // garante que o jogador não sairá do terminal. Se a posição for maior ou igual que o width do terminal ele não sai do lugar
+            playerY = (playerY < 0) ? 0 : (playerY >= height1 ? height1 :( playerY < 10 ? 1 : playerY));
+
+            // Draw the player at the new location  
+            Console.SetCursorPosition(playerX, playerY);
+            Console.Write(player);
+
+            if (showPositionData)
+            {
+                Console.SetCursorPosition(1, 32);
+                Console.Write($"Heigth: {playerY} - Width: {playerX}\n");
+                Console.Write($"food Heigth: {foodY} - Food Width: {foodX}");
+            }
+        }
+
+        // Clears the console, displays the food and player
+        void InitializeGame()
+        {
+            Console.Clear();
+            printBox();
+            ShowFood();
+            Console.SetCursorPosition(1, 10);
+            Console.Write("*");
+            Console.Write(player);
+        }
+
+        bool AteFood()
+        {
+            /*
+            if(checkGoodAperance())
+            {
+             return playerX == foodX + 2 && playerY == foodY || playerX == foodX + 1 && playerY == foodY;     
+            }
+            */
+            //else
+
+            return playerX == foodX && playerY == foodY;
+        }
+
+        bool checkBadAperance()
+        {
+            return player == "(X_X)";
+        }
+
+        bool checkGoodAperance()
+        {
+            return player == "(^-^)";
+        }
+
+        void printBox()
+        {
+            string b = new string('*', 20);
+            Console.Write(b);            
+            string a = new string('-', 116);
+            Console.Write(a);
+            Console.Write(b);
+            
+            for(int i = 1; i < 30; i++)
+            {
+                Console.WriteLine("|");
+            }
+
+            
+        }
+    }
+
+
+
+    static void maximizeWindow()
+    {
+        // Import the necessary functions from user32.dll
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
+        [DllImport("user32.dll")]
+        static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+        // Constants for the ShowWindow function
+        const int SW_MAXIMIZE = 3;
+        // Get the handle of the console window
+        IntPtr consoleWindowHandle = GetForegroundWindow();
+        // Maximize the console window
+        ShowWindow(consoleWindowHandle, SW_MAXIMIZE);
+        // Get the screen size
+        Rect screenRect;
+        GetWindowRect(consoleWindowHandle, out screenRect);
+        // Resize and reposition the console window to fill the screen
+        int width = screenRect.Right - screenRect.Left;
+        int height = screenRect.Bottom - screenRect.Top;
+        MoveWindow(consoleWindowHandle, screenRect.Left, screenRect.Top, width, height, true);
+        Console.ReadKey();
+
+
+    }
+}
